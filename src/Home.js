@@ -4,15 +4,16 @@ import { stringify } from "query-string";
 import QuestionCard from "./Question/Card";
 import Loader from "./common/Loader";
 import ErrorComp from "./common/ErrorComp";
+import LazyLoad from "./common/LazyLoad";
 
 class Home extends React.Component {
   state = {
     data: null,
     page: 1,
     pagesize: 10,
+    total: 0,
     order: "desc",
     sort: "activity",
-    data: {},
     loading: true,
     error: false
   };
@@ -24,6 +25,7 @@ class Home extends React.Component {
   apiCall = () => {
     const { page, pagesize, order, sort } = this.state;
     const params = stringify({
+      filter: "!9Z(-x-Q)8",
       site: config.site,
       page,
       pagesize,
@@ -37,8 +39,27 @@ class Home extends React.Component {
         }
         return res.json();
       })
-      .then(data => this.setState({ data, loading: false }))
+      .then(data => {
+        this.setState(prevState => ({
+          data: [...(prevState.data || []), ...(data.items || [])],
+          loading: false,
+          total: data.total
+        }));
+      })
       .catch(e => this.setState({ error: true, loading: false }));
+  };
+
+  loadMoreRows = () => {
+    if (!this.state.loading) {
+      this.setState(
+        prevState => ({
+          page: prevState.page + 1,
+          loading: true,
+          error: false
+        }),
+        this.apiCall
+      );
+    }
   };
 
   handleFilterChange = e => {
@@ -46,7 +67,9 @@ class Home extends React.Component {
       {
         [e.target.name]: e.target.value,
         loading: true,
-        error: false
+        error: false,
+        page: 1,
+        data: []
       },
       this.apiCall
     );
@@ -112,7 +135,7 @@ class Home extends React.Component {
     if (this.state.error) {
       return <ErrorComp />;
     }
-    if (this.state.loading) {
+    if (this.state.loading && this.state.page === 1) {
       return <Loader />;
     }
     if (!this.state.data) {
@@ -121,9 +144,16 @@ class Home extends React.Component {
 
     return (
       <div className="question-list">
-        {this.state.data.items.map(item => (
-          <QuestionCard allowClick item={item} />
-        ))}
+        <LazyLoad
+          height="80vh"
+          total={this.state.total}
+          currentTotal={this.state.data.length}
+          loadMoreRows={this.loadMoreRows}
+        >
+          {this.state.data.map(item => (
+            <QuestionCard allowClick item={item} />
+          ))}
+        </LazyLoad>
       </div>
     );
   }
