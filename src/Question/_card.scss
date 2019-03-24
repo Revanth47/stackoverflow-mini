@@ -1,0 +1,28 @@
+.question-card {
+  border: 1px solid #bbb;
+  padding: 5px;
+  .question-title {
+    font-weight: bold;
+  }
+  .question-tags {
+    display: flex;
+    margin: 10px 0;
+    .question-tag {
+      margin: 5px;
+      background: #E1ECF4;
+      color: #39739d;
+      border-radius: 2px;
+      padding: 5px;
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+  }
+  .question-link {
+    z-index: 5;
+  }
+  .question-meta {
+    display: flex; 
+    justify-content: space-between;
+  }
+}

@@ -1,0 +1,45 @@
+@import './Question/card';
+@import './User/user';
+@import './Answer/card';
+
+.question-list {
+  .question-card {
+    margin: 10px 0;
+  }
+}
+
+a {
+  text-decoration: none;
+}
+label {
+  padding-right: 5px;
+}
+
+.filters-container {
+  .filters {
+    display: flex;
+    .filter {
+      margin: 5px;
+    }
+  }
+}
+
+.questions-container {
+  position: relative;
+  min-height: 300px;
+  width: 100%;
+}
+
+.loader {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  text-align: center;
+  transform: translateY(-50%);
+}
+
+.clickable {
+  &:hover {
+    cursor: pointer;
+  }
+}

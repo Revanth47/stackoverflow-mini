@@ -1,0 +1,12 @@
+.answer-card {
+  border: 1px solid #bbb;
+  padding: 5px;  
+  margin: 15px 0;
+  .answer-meta {
+    display: flex; 
+    justify-content: space-between;
+  }
+  &.accepted {
+    border: 2px solid green;
+  }
+}
